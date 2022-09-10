@@ -1,7 +1,7 @@
 let task_id_g = null;
 let set_to_sort_g = null;
 
-//editing and sorting tasks with buble sort. could splice and do insertion... n^2 vs 2logn
+//editing, sorting (by date) and redisplaying tasks
 
 function edit_task_modal(description, due, assigned, task_id, set_to_sort) {
     task_id_g = task_id;
@@ -82,90 +82,45 @@ $('#edit_task_in_this_room').click(function() {
                if(task_due[2].length === 1) { task_due[2] = 0 + task_due[2]; }
                task_due = task_due[0] + '-' + task_due[1] + '-' + task_due[2] + 'T04:00:00.000Z';
             }
-              
-            //could create three variables and run one condition..
+
+            let iterating_through;
+            let function_;
 
             if(set_to_sort_g === 'mine') { 
+               iterating_through = 'my_tasks';
+               function_ = load_my_tasks;
+            } else if(set_to_sort_g === 'free') { 
+               iterating_through = 'free_tasks';
+               function_ = load_free_tasks;
+            } else { 
+               iterating_through = 'other_tasks';
+               function_ = load_other_tasks;
+            }
 
-               for(let i = 0; i < state.my_tasks.length; i++) { 
-                  if(state.my_tasks[i].id == task_id_g) { 
-                     state.my_tasks[i].owned_by_email = task_assigned_to;
-                     state.my_tasks[i].due_by = task_due;
-                     state.my_tasks[i].description = task_description;
-                     break;
-                  }
+            for(let i = 0; i < state[iterating_through].length; i++) { 
+               if(state[iterating_through][i].id == task_id_g) { 
+                  state[iterating_through][i].owned_by_email = task_assigned_to;
+                  state[iterating_through][i].due_by = task_due;
+                  state[iterating_through][i].description = task_description;
+                  break;
                }
+            }
 
-               for(let i = 0; i < state.my_tasks.length; i++) { 
-                  for(let j = 0; j < state.my_tasks.length; j++) { 
-                     if(typeof(state.my_tasks[j+1]) !== 'undefined') {
-                        if((state.my_tasks[j].due_by !== null && state.my_tasks[j+1].due_by === null) || (new Date(state.my_tasks[j+1].due_by) < new Date(state.my_tasks[j].due_by))) { 
-                           if(new Date(state.my_tasks[j+1].due_by) < new Date(state.my_tasks[j].due_by)) { 
-                              let temp = state.my_tasks[j];
-                              state.my_tasks[j] = state.my_tasks[j+1];
-                              state.my_tasks[j+1] = temp;
-                           }                        
-                        } 
-                     }
-                  }
-               }
-
-               load_my_tasks();
-
-            } else if(set_to_sort_g === 'free') {
-               
-               for(let i = 0; i < state.free_tasks.length; i++) { 
-                  if(state.free_tasks[i].id == task_id_g) { 
-                     state.free_tasks[i].due_by = task_due;
-                     state.free_tasks[i].owned_by_email = task_assigned_to;
-                     state.free_tasks[i].description = task_description;
-                     splice_and_unshift = i;
-                     break;
-                  }
-               }
-
-               for(let i = 0; i < state.free_tasks.length; i++) { 
-                  for(let j = 0; j < state.free_tasks.length; j++) { 
-                     if(typeof(state.free_tasks[j+1]) !== 'undefined') {
-                        if((state.free_tasks[j].due_by !== null && state.free_tasks[j+1].due_by === null) || (new Date(state.free_tasks[j+1].due_by) < new Date(state.free_tasks[j].due_by))) { 
-                           let temp = state.free_tasks[j];
-                           state.free_tasks[j] = state.free_tasks[j+1];
-                           state.free_tasks[j+1] = temp;
+            for(let i = 0; i < state[iterating_through].length; i++) { 
+               for(let j = 0; j < state[iterating_through].length; j++) { 
+                  if(typeof(state[iterating_through][j+1]) !== 'undefined') {
+                     if((state[iterating_through][j].due_by !== null && state[iterating_through][j+1].due_by === null) || (new Date(state[iterating_through][j+1].due_by) < new Date(state[iterating_through][j].due_by))) { 
+                        if(new Date(state[iterating_through][j+1].due_by) < new Date(state[iterating_through][j].due_by)) { 
+                           let temp = state[iterating_through][j];
+                           state[iterating_through][j] = state[iterating_through][j+1];
+                           state[iterating_through][j+1] = temp;
                         }                        
                      } 
                   }
-               }               
-
-               load_free_tasks();
-
-            } else { 
-
-               for(let i = 0; i < state.other_tasks.length; i++) { 
-                  if(state.other_tasks[i].id == task_id_g) { 
-                     state.other_tasks[i].owned_by_email = task_assigned_to;
-                     state.other_tasks[i].due_by = task_due;
-                     state.other_tasks[i].description = task_description;
-                     break;
-                  }
                }
-
-               for(let i = 0; i < state.other_tasks.length; i++) { 
-                  for(let j = 0; j < state.other_tasks.length; j++) { 
-                     if(typeof(state.other_tasks[j+1]) !== 'undefined') {
-                        if((state.other_tasks[j].due_by !== null && state.other_tasks[j+1].due_by === null) || (new Date(state.other_tasks[j+1].due_by) < new Date(state.other_tasks[j].due_by))) { 
-                           if(state.other_tasks[j+1].due_by < state.other_tasks[j].due_by) { 
-                              let temp = state.other_tasks[j];
-                              state.other_tasks[j] = state.other_tasks[j+1];
-                              state.other_tasks[j+1] = temp;
-                           }                        
-                        } 
-                     }
-                  }
-               }
-
-               load_other_tasks();
-
             }
+
+            function_();
 
             $("#edit_task_description").val('');
             $("#edit_task_due").val('');
