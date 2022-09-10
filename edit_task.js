@@ -110,11 +110,9 @@ $('#edit_task_in_this_room').click(function() {
                for(let j = 0; j < state[iterating_through].length; j++) { 
                   if(typeof(state[iterating_through][j+1]) !== 'undefined') {
                      if((state[iterating_through][j].due_by !== null && state[iterating_through][j+1].due_by === null) || (new Date(state[iterating_through][j+1].due_by) < new Date(state[iterating_through][j].due_by))) { 
-                        if(new Date(state[iterating_through][j+1].due_by) < new Date(state[iterating_through][j].due_by)) { 
-                           let temp = state[iterating_through][j];
-                           state[iterating_through][j] = state[iterating_through][j+1];
-                           state[iterating_through][j+1] = temp;
-                        }                        
+                       let temp = state[iterating_through][j];
+                       state[iterating_through][j] = state[iterating_through][j+1];
+                       state[iterating_through][j+1] = temp;
                      } 
                   }
                }
