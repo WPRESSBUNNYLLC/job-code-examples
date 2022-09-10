@@ -1,28 +1,14 @@
 let task_id_g = null;
 let set_to_sort_g = null;
 
-//pulling up a modal and editing three types of tasks
+//editing and sorting tasks with buble sort. could splice and do insertion... n^2 vs 2logn
 
 function edit_task_modal(description, due, assigned, task_id, set_to_sort) {
-    $("#edit_task_description_input").val(description);
-    if(due !== null) {
-      if(due.includes('T')) { //value from db not edited
-         due = due.split('T')[0];
-      } else { //value that was edited
-         due = due.split('-');
-         if(due[1].length === 1) { 
-            due[1] = 0 + due[1];
-         }
-         if(due[2].length === 1) { 
-            due[2] = 0 + due[2];
-         }
-         due = due[0] + '-' + due[1] + '-' + due[2];
-      }
-      $("#edit_task_due_input").val(due); 
-    }
-    $("#edit_task_assigned_input").val(assigned);
     task_id_g = task_id;
     set_to_sort_g = set_to_sort;
+    $("#edit_task_description_input").val(description);
+    $("#edit_task_due_input").val(due.split('T')[0]); 
+    $("#edit_task_assigned_input").val(assigned);
     $('#editTaskModal').modal('show');
 }
 
@@ -90,6 +76,15 @@ $('#edit_task_in_this_room').click(function() {
  
           if(result.response.type === 'task_edited') { 
 
+            if(task_due !== null && task_due !== 'null' && task_due !== '') { 
+               task_due = task_due.split('-');
+               if(task_due[1].length === 1) {  task_due[1] = 0 + task_due[1]; }
+               if(task_due[2].length === 1) { task_due[2] = 0 + task_due[2]; }
+               task_due = task_due[0] + '-' + task_due[1] + '-' + task_due[2] + 'T04:00:00.000Z';
+            }
+              
+            //could create three variables and run one condition..
+
             if(set_to_sort_g === 'mine') { 
 
                for(let i = 0; i < state.my_tasks.length; i++) { 
@@ -100,13 +95,11 @@ $('#edit_task_in_this_room').click(function() {
                      break;
                   }
                }
-                
-               //below or splicing known value, iterating once, checking and pushing
 
-               for(let i = 0; i < state.my_tasks.length; i++) { //could create three variables instead of if else
+               for(let i = 0; i < state.my_tasks.length; i++) { 
                   for(let j = 0; j < state.my_tasks.length; j++) { 
                      if(typeof(state.my_tasks[j+1]) !== 'undefined') {
-                        if(state.my_tasks[j].due_by !== null && state.my_tasks[j+1].due_by !== null) { 
+                        if((state.my_tasks[j].due_by !== null && state.my_tasks[j+1].due_by === null) || (new Date(state.my_tasks[j+1].due_by) < new Date(state.my_tasks[j].due_by))) { 
                            if(new Date(state.my_tasks[j+1].due_by) < new Date(state.my_tasks[j].due_by)) { 
                               let temp = state.my_tasks[j];
                               state.my_tasks[j] = state.my_tasks[j+1];
@@ -119,13 +112,14 @@ $('#edit_task_in_this_room').click(function() {
 
                load_my_tasks();
 
-            } else if(set_to_sort_g === 'free') { 
-
+            } else if(set_to_sort_g === 'free') {
+               
                for(let i = 0; i < state.free_tasks.length; i++) { 
                   if(state.free_tasks[i].id == task_id_g) { 
-                     state.free_tasks[i].owned_by_email = task_assigned_to;
                      state.free_tasks[i].due_by = task_due;
+                     state.free_tasks[i].owned_by_email = task_assigned_to;
                      state.free_tasks[i].description = task_description;
+                     splice_and_unshift = i;
                      break;
                   }
                }
@@ -133,16 +127,14 @@ $('#edit_task_in_this_room').click(function() {
                for(let i = 0; i < state.free_tasks.length; i++) { 
                   for(let j = 0; j < state.free_tasks.length; j++) { 
                      if(typeof(state.free_tasks[j+1]) !== 'undefined') {
-                        if(state.free_tasks[j].due_by !== null && state.free_tasks[j+1].due_by !== null) { 
-                           if(new Date(state.free_tasks[j+1].due_by) < new Date(state.free_tasks[j].due_by)) { 
-                              let temp = state.free_tasks[j];
-                              state.free_tasks[j] = state.free_tasks[j+1];
-                              state.free_tasks[j+1] = temp;
-                           }                        
-                        } 
-                     }
+                        if((state.free_tasks[j].due_by !== null && state.free_tasks[j+1].due_by === null) || (new Date(state.free_tasks[j+1].due_by) < new Date(state.free_tasks[j].due_by))) { 
+                           let temp = state.free_tasks[j];
+                           state.free_tasks[j] = state.free_tasks[j+1];
+                           state.free_tasks[j+1] = temp;
+                        }                        
+                     } 
                   }
-               }
+               }               
 
                load_free_tasks();
 
@@ -160,7 +152,7 @@ $('#edit_task_in_this_room').click(function() {
                for(let i = 0; i < state.other_tasks.length; i++) { 
                   for(let j = 0; j < state.other_tasks.length; j++) { 
                      if(typeof(state.other_tasks[j+1]) !== 'undefined') {
-                        if(state.other_tasks[j].due_by !== null && state.other_tasks[j+1].due_by !== null) { 
+                        if((state.other_tasks[j].due_by !== null && state.other_tasks[j+1].due_by === null) || (new Date(state.other_tasks[j+1].due_by) < new Date(state.other_tasks[j].due_by))) { 
                            if(state.other_tasks[j+1].due_by < state.other_tasks[j].due_by) { 
                               let temp = state.other_tasks[j];
                               state.other_tasks[j] = state.other_tasks[j+1];
