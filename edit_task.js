@@ -1,7 +1,7 @@
 let task_id_g = null;
 let set_to_sort_g = null;
 
-//editing, sorting (by date) and redisplaying tasks
+//editing, bubble sorting (by date) and redisplaying tasks
 
 function edit_task_modal(description, due, assigned, task_id, set_to_sort) {
     task_id_g = task_id;
@@ -106,7 +106,7 @@ $('#edit_task_in_this_room').click(function() {
                }
             }
 
-            for(let i = 0; i < state[iterating_through].length; i++) { 
+            for(let i = 0; i < state[iterating_through].length; i++) { //could splice and iterate 2logn vs n^2
                for(let j = 0; j < state[iterating_through].length; j++) { 
                   if(typeof(state[iterating_through][j+1]) !== 'undefined') {
                      if((state[iterating_through][j].due_by !== null && state[iterating_through][j+1].due_by === null) || (new Date(state[iterating_through][j+1].due_by) < new Date(state[iterating_through][j].due_by))) { 
