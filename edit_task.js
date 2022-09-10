@@ -100,8 +100,10 @@ $('#edit_task_in_this_room').click(function() {
                      break;
                   }
                }
+                
+               //below or splicing known value, iterating once, checking and pushing
 
-               for(let i = 0; i < state.my_tasks.length; i++) { 
+               for(let i = 0; i < state.my_tasks.length; i++) { //could create three variables instead of if else
                   for(let j = 0; j < state.my_tasks.length; j++) { 
                      if(typeof(state.my_tasks[j+1]) !== 'undefined') {
                         if(state.my_tasks[j].due_by !== null && state.my_tasks[j+1].due_by !== null) { 
