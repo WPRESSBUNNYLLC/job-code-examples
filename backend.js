@@ -127,7 +127,7 @@ router.post('/admin_chat_initial_location_onload', async function(req, res) {
 
   const options = {
     provider: 'google',
-    apiKey: 'AIzaSyDjqMm_zeDjTOYy8h26LcuxBBfN7OjooBo',
+    apiKey: 'mm,',
   };
 
   const geocoder = NodeGeocoder(options);
