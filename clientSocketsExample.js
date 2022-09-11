@@ -418,7 +418,7 @@ $('#message_send_button').click(async function() {
          extension !== 'csv' && 
          extension !== 'img'
       ) { 
-         count.files_input_error = 'the format of the files you are attempting to insert are not correct. files supported are png, jpg, docx, pdf, txt, pptx, img';
+         count.files_input_error = 'files supported are png, jpg, docx, pdf, txt, pptx, img';
          break;
       }
 
@@ -496,7 +496,7 @@ function delete_message(message_id) {
             $(`#${message_id}`).remove();
 
             if(result.value > 1) { 
-               alert('hmm? more than one message was deleted in this instance... actually there were' + result.value);
+               alert('hmm? more than one message was deleted in this instance... actually there were ' + result.value);
             }
 
             return;
@@ -721,7 +721,7 @@ function init_video(g_peer) {
             $('.ri-phone-line').css('color', '#7269ef');
             $(`.hide_all_calling-${call.peer}`).attr("hidden", true);
             $(`#answer-${call.peer}`).attr("hidden", false);
-            try {
+              try {
                setTimeout(function(){
                   if(typeof(currently_calling[call.peer]) !== 'undefined') {
                      currently_calling[call.peer].count_down(); 
