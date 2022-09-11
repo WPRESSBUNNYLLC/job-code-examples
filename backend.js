@@ -172,7 +172,7 @@ router.post('/admin_chat_get_lat_long', async function(req, res) {
 
     const options = {
       provider: 'google',
-      apiKey: 'AIzaSyDjqMm_zeDjTOYy8h26LcuxBBfN7OjooBo',
+      apiKey: 'nnmn',
     };
 
     const geocoder = NodeGeocoder(options);
