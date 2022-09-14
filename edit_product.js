@@ -4,7 +4,7 @@ let subscription_duration_g;
 let product_add_image_global_count;
 let product_file_name_g;
 
-//example of editing a product 
+//example of editing a product FRONT END EXAMPLE
 
 function edit_product_info(title, category, description, price, hidden, product_id, product_file_id, product_hidden_link) {
     product_id_g = product_id;
