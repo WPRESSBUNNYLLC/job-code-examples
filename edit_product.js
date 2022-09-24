@@ -287,7 +287,7 @@ async function edit_product_images(file, product_id) {
     $('#edit_product_image_view').prop('src', product_image_set_g[product_add_image_global_count] ? product_image_set_g[product_add_image_global_count] : '/images/wpressbunnyllclogonew.png');
     $('#edit_product_image_view').attr('src', product_image_set_g[product_add_image_global_count] ? product_image_set_g[product_add_image_global_count] : '/images/wpressbunnyllclogonew.png');
 
-    if(images[0] !== null || images[0] !== 'null') {
+    if(images[0] !== null && images[0] !== 'null') {
        $(".images-galaore").unbind();
        $('#edit_product_image_view').click(function(){view_single_image(product_image_set_g[product_add_image_global_count] ? product_image_set_g[product_add_image_global_count] : '/images/wpressbunnyllclogonew.png')});
     }
