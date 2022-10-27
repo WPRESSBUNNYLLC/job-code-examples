@@ -42,21 +42,19 @@ router.post('/auth-login', function(req, res, next) {
     const user_count = result.length;
  
     if(user_count !== 1) { 
-
       if(typeof(error.email) === 'undefined') {
         error.email = 'Wrong email and password combination';
       } else { 
         error.email += ' and wrong email / password combination';
       }
-
-      if(typeof(req.session.login_attempts) === 'undefined') {
-        req.session.login_attempts = 1;
-      } else {
-        req.session.login_attempts += 1;
-      }
-
     }
- 
+      
+    if(typeof(req.session.login_attempts) === 'undefined') {
+      req.session.login_attempts = 1;
+    } else {
+      req.session.login_attempts += 1;
+    }
+
     if(Object.keys(error).length > 0) { 
       var error_string = '?';
       for (const [key, value] of Object.entries(error)) {
@@ -81,7 +79,7 @@ router.post('/auth-login', function(req, res, next) {
       }
 
       req.session.selection_hidden_id = selection_hidden_id_update;
-      tokens[selection_hidden_id_update] = Date.now() + 86400000;
+      tokens[selection_hidden_id_update] = Date.now() + 86400000; //The token is stored in a session variable (cookie), and is saved on the server. When the user makes a request, they use their cookie to look for another cookie match.
       res.redirect('/admin-chat?room_name=...&room_id=none');
 
     });
