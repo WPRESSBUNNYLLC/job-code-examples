@@ -1,0 +1,87 @@
+not done but proof of base 9
+
+//counting by one
+//algorithms for breaking down numbers via a single array
+//BASE 9 PROOF USING ARRAY SHOWS HOW A COMPUTER COUNTS
+//the amount of times I check for a 9 going left from the right
+
+let counter = 0;
+let updated_number_index; //set to updated_number.length - 1 (last index)
+let updated_number = [];
+begin_count();
+
+
+//0-9 on every iteration passed to a loop
+function begin_count() { 
+    
+    if(counter == 10) { 
+        counter = 0;
+    }
+    
+    if(updated_number.length - 1 === -1) {
+        updated_number[0] = counter;
+    } else { 
+        updated_number[updated_number.length - 1] = counter;
+    }
+    
+    console.log(JSON.stringify(updated_number));
+    
+    if(counter == 9) {
+        updated_number_index = updated_number.length - 1;
+        recursive_update();
+    }
+    
+    if(updated_number.length > 4) { 
+        return;
+    }
+    
+    counter = counter + 1;
+    
+    begin_count();
+    
+}
+
+function recursive_update() { 
+    
+    if(counter == 10) { 
+        counter = 0;
+    }
+    
+    if(updated_number.length > 4) { 
+        return;
+    }
+    
+    // console.log(JSON.stringify(updated_number));
+    
+    //if left left place is non existant, new place created
+    if(typeof(updated_number[updated_number_index-1]) === 'undefined') {
+        updated_number.unshift(1);
+        for(let i = 0; i < updated_number.length; i++) { 
+            if(i > 0) { 
+                updated_number[i] = 0;
+            }
+        }
+        // counter = 1; //setting that last value to 1 on the end
+        return; 
+    } 
+    
+    //if left place is in-between 1 and 8, update left to + 1 and same to 0
+    if(updated_number[updated_number_index-1] >= 0 && updated_number[updated_number_index-1] < 9) {
+        updated_number[updated_number_index-1] = updated_number[updated_number_index-1] + 1;
+        updated_number[updated_number_index] = 0;
+        // counter += 1; //
+        return;
+    } 
+    
+    //if left number is 9. set left number to zero, and update, update_number_index
+    if(updated_number[updated_number_index-1] === 9) { 
+        updated_number[updated_number_index-1] = 0; //very difficult to find... but the left value being nine, will automatically make it 0 no matter what...
+        updated_number_index = updated_number_index - 1; 
+        counter += 1;
+        recursive_update();
+    }
+    
+    console.log('SHOULD NEVER HIT')
+    console.log(updated_number[updated_number_index-1]);
+    
+}
