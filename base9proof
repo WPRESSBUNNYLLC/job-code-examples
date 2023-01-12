@@ -63,7 +63,6 @@ function recursive_update() {
     
     //if left number is 9. set left number to zero, and update, update_number_index
     if(updated_number[updated_number_index-1] === 9) { 
-        updated_number[updated_number_index-1] = 0; //very difficult to find... but the left value being nine, will automatically make it 0 no matter what...
         updated_number_index = updated_number_index - 1; 
         recursive_update();
     }
